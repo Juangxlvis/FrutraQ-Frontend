@@ -1,0 +1,93 @@
+<div class="punto-form-page">
+  <h1>Registrar parada</h1>
+
+  <mat-stepper orientation="vertical" linear>
+
+    <mat-step [stepControl]="proveedorControl" label="Proveedor">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Buscar proveedor</mat-label>
+        <input matInput [formControl]="proveedorControl" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayProveedor" (optionSelected)="seleccionarProveedor($event.option.value)">
+          @for (proveedor of proveedoresFiltrados(); track proveedor.id) {
+            <mat-option [value]="proveedor">{{ proveedor.nombre }} · {{ proveedor.vereda }}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+      <button mat-raised-button color="primary" matStepperNext [disabled]="!proveedorSeleccionado()">Siguiente</button>
+    </mat-step>
+
+    <mat-step [stepControl]="tipoForm" label="Tipo de servicio">
+      <mat-button-toggle-group [formControl]="tipoForm.controls.tipo_servicio" class="tipo-toggle">
+        <mat-button-toggle value="COMPRA">COMPRA</mat-button-toggle>
+        <mat-button-toggle value="FLETE">FLETE</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      @if (tipoForm.value.tipo_servicio === 'FLETE') {
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Precio por kg</mat-label>
+          <input matInput type="number" [formControl]="tipoForm.controls.precio_flete_kg" />
+        </mat-form-field>
+      }
+
+      <div class="step-actions">
+        <button mat-button matStepperPrevious>Atrás</button>
+        <button mat-raised-button color="primary" matStepperNext>Siguiente</button>
+      </div>
+    </mat-step>
+
+    <mat-step label="Lotes">
+      @if (lotesAgregados().length > 0) {
+        @for (lote of lotesAgregados(); track $index) {
+          <div class="lote-item">
+            <span>{{ lote.producto.nombre }} · {{ lote.calidad }} · {{ lote.num_canastillas }} canastillas · {{ lote.peso_recoleccion_kg }} kg</span>
+            <button mat-icon-button (click)="eliminarLote($index)"><mat-icon>delete</mat-icon></button>
+          </div>
+        }
+      }
+
+      <form [formGroup]="loteForm" class="lote-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Producto</mat-label>
+          <mat-select formControlName="producto">
+            @for (producto of productos(); track producto.id) {
+              <mat-option [value]="producto">{{ producto.nombre }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-button-toggle-group formControlName="calidad" class="calidad-toggle">
+          <mat-button-toggle value="1RA">Primera</mat-button-toggle>
+          <mat-button-toggle value="2DA">Segunda</mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nº canastillas</mat-label>
+          <input matInput type="number" formControlName="num_canastillas" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Peso total (kg)</mat-label>
+          <input matInput type="number" formControlName="peso_recoleccion_kg" />
+        </mat-form-field>
+
+        @if (pesoPromedioEnVivo(); as promedio) {
+          <p class="peso-promedio">Peso promedio/canastilla: {{ promedio }} kg</p>
+        }
+
+        <button mat-stroked-button type="button" [disabled]="loteForm.invalid" (click)="agregarLote()">
+          <mat-icon>add</mat-icon> Agregar lote
+        </button>
+      </form>
+
+      <div class="step-actions">
+        <button mat-button matStepperPrevious>Atrás</button>
+        <button mat-raised-button color="primary"
+                [disabled]="lotesAgregados().length === 0 || guardando()"
+                (click)="guardarParada()">
+          Guardar parada
+        </button>
+      </div>
+    </mat-step>
+
+  </mat-stepper>
+</div>

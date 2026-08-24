@@ -1,0 +1,16 @@
+.viaje-list-page { padding: 16px; padding-bottom: 88px; }
+h1 { font-size: 20px; margin-bottom: 16px; }
+.center-spinner { display: flex; justify-content: center; padding: 48px 0; }
+.viaje-activo-card { margin-bottom: 16px; border-left: 4px solid var(--mat-sys-primary); }
+.filtros { margin-bottom: 16px; }
+.viajes-grid { display: flex; flex-direction: column; gap: 12px; }
+.viaje-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.viaje-total { font-size: 18px; font-weight: 600; margin: 0; }
+.estado-chip {
+  padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;
+  &.estado-RECOLECCION { background: #fff3cd; color: #856404; }
+  &.estado-TRANSITO { background: #cce5ff; color: #004085; }
+  &.estado-ENTREGADO { background: #d4edda; color: #155724; }
+  &.estado-CANCELADO { background: #f8d7da; color: #721c24; }
+}
+.fab-add { position: fixed; bottom: 72px; right: 16px; }

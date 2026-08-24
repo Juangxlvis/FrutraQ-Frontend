@@ -1,0 +1,8 @@
+.viaje-form-page { padding: 16px; }
+h1 { font-size: 20px; margin-bottom: 16px; }
+.full-width { width: 100%; margin-bottom: 12px; }
+.vehiculo-label { display: block; font-size: 14px; margin-bottom: 8px; color: var(--mat-sys-on-surface-variant); }
+.vehiculo-toggle { width: 100%; margin-bottom: 16px; display: flex; }
+.vehiculo-toggle mat-button-toggle { flex: 1; }
+.error { color: var(--mat-sys-error); font-size: 0.875rem; }
+button[type="submit"] { min-height: 56px; }

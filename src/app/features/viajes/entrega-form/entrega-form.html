@@ -1,0 +1,63 @@
+<div class="entrega-form-page">
+  <h1>Registrar entrega</h1>
+
+  @if (!entregaId()) {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Buscar cliente</mat-label>
+      <input matInput [formControl]="clienteControl" [matAutocomplete]="auto" />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCliente" (optionSelected)="seleccionarCliente($event.option.value)">
+        @for (cliente of clientesFiltrados(); track cliente.id) {
+          <mat-option [value]="cliente">{{ cliente.nombre }} · {{ cliente.ciudad }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  } @else {
+    <p class="cliente-elegido">Cliente: <strong>{{ clienteSeleccionado()?.nombre }}</strong></p>
+
+    @if (detallesGuardados().length > 0) {
+      @for (d of detallesGuardados(); track $index) {
+        <div class="detalle-item">
+          <span>{{ d.producto.nombre }} — 1ra: {{ d.kg_primera_recibida }}kg · 2da: {{ d.kg_segunda_recibida }}kg</span>
+          <strong>$ {{ d.subtotal }}</strong>
+        </div>
+      }
+    }
+
+    <form [formGroup]="detalleForm" class="detalle-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Producto</mat-label>
+        <mat-select formControlName="producto">
+          @for (producto of productos(); track producto.id) {
+            <mat-option [value]="producto">{{ producto.nombre }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="kg-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Kg primera</mat-label>
+          <input matInput type="number" formControlName="kg_primera_recibida" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Kg segunda</mat-label>
+          <input matInput type="number" formControlName="kg_segunda_recibida" />
+        </mat-form-field>
+      </div>
+
+      <button mat-stroked-button type="button" [disabled]="detalleForm.invalid" (click)="agregarDetalle()">
+        <mat-icon>add</mat-icon> Agregar producto
+      </button>
+    </form>
+
+    <div class="total-row">
+      <span>Total de la entrega</span>
+      <strong>$ {{ totalEntrega() }}</strong>
+    </div>
+
+    <button mat-raised-button color="primary" class="full-width"
+            [disabled]="detallesGuardados().length === 0"
+            (click)="finalizar()">
+      Finalizar entrega
+    </button>
+  }
+</div>

@@ -1,0 +1,12 @@
+.punto-form-page { padding: 16px; }
+h1 { font-size: 20px; margin-bottom: 16px; }
+.full-width { width: 100%; margin-bottom: 12px; }
+.tipo-toggle, .calidad-toggle { width: 100%; display: flex; margin-bottom: 12px; }
+.tipo-toggle mat-button-toggle, .calidad-toggle mat-button-toggle { flex: 1; }
+.step-actions { display: flex; justify-content: space-between; margin-top: 16px; }
+.lote-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0; border-bottom: 1px solid var(--mat-sys-outline-variant); font-size: 14px;
+}
+.lote-form { margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--mat-sys-outline-variant); }
+.peso-promedio { font-size: 13px; color: var(--mat-sys-on-surface-variant); margin: 4px 0 12px; }

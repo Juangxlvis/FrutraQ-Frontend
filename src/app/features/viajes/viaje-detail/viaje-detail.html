@@ -1,0 +1,71 @@
+<div class="viaje-detail-page">
+  @if (loading()) {
+    <div class="center-spinner"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else if (viaje(); as v) {
+
+    <div class="header">
+      <h1>{{ v.fecha_salida | date:'d MMM y' }} · {{ v.vehiculo }}</h1>
+      <span class="estado-chip" [class]="'estado-' + v.estado">{{ v.estado }}</span>
+    </div>
+
+    <section class="seccion">
+      <h2>Recolección</h2>
+      @if (puntos().length === 0) {
+        <p class="vacio">Sin paradas registradas.</p>
+      } @else {
+        @for (punto of puntos(); track punto.id) {
+          <mat-card class="item-card" (click)="toggleParada(punto.id)">
+            <mat-card-content>
+              <div class="parada-header">
+                <span>Parada {{ punto.orden }} · {{ nombreProveedor(punto.proveedor) }}</span>
+                <span class="tag">{{ punto.tipo_servicio }}</span>
+              </div>
+              @if (expandido() === punto.id) {
+                <div class="lotes-detalle">
+                  @if (lotesPorPunto()[punto.id]; as lotes) {
+                    @for (lote of lotes; track lote.id) {
+                      <div class="lote-row"><strong>{{ nombreProducto(lote.producto) }}</strong> — {{ etiquetaCalidad(lote.calidad) }} · {{ lote.num_canastillas }} canastillas · {{ lote.peso_recoleccion_kg }} kg</div>
+                    }
+                  } @else {
+                    <p class="vacio">Cargando lotes...</p>
+                  }
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        }
+      }
+      <button mat-stroked-button class="add-btn" [routerLink]="['/viajes', v.id, 'puntos', 'nuevo']">
+        <mat-icon>add</mat-icon> Agregar parada
+      </button>
+    </section>
+
+    <section class="seccion">
+      <h2>Entregas</h2>
+      @if (entregas().length === 0) {
+        <p class="vacio">Sin entregas registradas.</p>
+      } @else {
+        @for (entrega of entregas(); track entrega.id) {
+          <mat-card class="item-card"><mat-card-content>
+            <span>{{ nombreCliente(entrega.cliente) }} · $ {{ entrega.total }}</span>
+            <span class="tag" [class.pagado]="entrega.estado_pago === 'PAGADO'">{{ entrega.estado_pago }}</span>
+          </mat-card-content></mat-card>
+        }
+      }
+      <button mat-stroked-button class="add-btn" [routerLink]="['/viajes', v.id, 'entregas', 'nueva']">
+        <mat-icon>add</mat-icon> Agregar entrega
+      </button>
+    </section>
+
+    <mat-card class="resumen-card"><mat-card-content>
+      <div class="resumen-row"><span>Total recolectado</span><span>{{ v.total_recolectado_kg }} kg</span></div>
+      <div class="resumen-row"><span>Total entregado</span><span>$ {{ v.total_entregado }}</span></div>
+    </mat-card-content></mat-card>
+
+    @if (v.estado === 'RECOLECCION') {
+      <button mat-raised-button color="primary" class="full-width" [disabled]="cambiandoEstado()" (click)="marcarTransito()">Marcar en tránsito</button>
+    } @else if (v.estado === 'TRANSITO') {
+      <button mat-raised-button color="primary" class="full-width" [disabled]="cambiandoEstado()" (click)="marcarEntregado()">Marcar entregado</button>
+    }
+  }
+</div>

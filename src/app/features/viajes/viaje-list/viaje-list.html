@@ -1,0 +1,49 @@
+<div class="viaje-list-page">
+  <h1>Viajes</h1>
+
+  @if (loading()) {
+    <div class="center-spinner"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else if (error()) {
+    <app-empty-state icon="error_outline" message="No se pudo cargar la lista de viajes." />
+  } @else {
+
+    @if (viajeActivo(); as activo) {
+      <mat-card class="viaje-activo-card" routerLink]="['/viajes', activo.id]">
+        <mat-card-header><mat-card-title>Viaje activo</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <p>{{ activo.fecha_salida | date:'d MMM y' }} · {{ activo.vehiculo }}</p>
+          <span class="estado-chip" [class]="'estado-' + activo.estado">{{ activo.estado }}</span>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <mat-chip-set class="filtros">
+      <mat-chip-option (click)="filtro.set('TODOS')" [selected]="filtro() === 'TODOS'">Todos</mat-chip-option>
+      <mat-chip-option (click)="filtro.set('EN_CURSO')" [selected]="filtro() === 'EN_CURSO'">En curso</mat-chip-option>
+      <mat-chip-option (click)="filtro.set('ENTREGADOS')" [selected]="filtro() === 'ENTREGADOS'">Entregados</mat-chip-option>
+      <mat-chip-option (click)="filtro.set('CANCELADOS')" [selected]="filtro() === 'CANCELADOS'">Cancelados</mat-chip-option>
+    </mat-chip-set>
+
+    @if (viajesFiltrados().length === 0) {
+      <app-empty-state icon="local_shipping" message="No hay viajes en este filtro." />
+    } @else {
+      <div class="viajes-grid">
+        @for (viaje of viajesFiltrados(); track viaje.id) {
+          <mat-card class="viaje-card" [routerLink]="['/viajes', viaje.id]">
+            <mat-card-content>
+              <div class="viaje-card-header">
+                <span>{{ viaje.fecha_salida | date:'d MMM y' }} · {{ viaje.vehiculo }}</span>
+                <span class="estado-chip" [class]="'estado-' + viaje.estado">{{ viaje.estado }}</span>
+              </div>
+              <p class="viaje-total">$ {{ viaje.total_entregado }}</p>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+
+  <button mat-fab color="primary" class="fab-add" aria-label="Crear viaje" routerLink="/viajes/crear">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

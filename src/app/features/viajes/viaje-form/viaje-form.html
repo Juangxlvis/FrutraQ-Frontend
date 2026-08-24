@@ -1,0 +1,29 @@
+<div class="viaje-form-page">
+  <h1>Nuevo viaje</h1>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Fecha de salida</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="fecha_salida" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <label class="vehiculo-label">Vehículo</label>
+    <mat-button-toggle-group formControlName="vehiculo" class="vehiculo-toggle">
+      <mat-button-toggle value="TURBO">TURBO</mat-button-toggle>
+      <mat-button-toggle value="CAMION">CAMIÓN</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Observaciones (opcional)</mat-label>
+      <textarea matInput formControlName="observaciones" rows="3"></textarea>
+    </mat-form-field>
+
+    @if (errorMessage()) { <p class="error">{{ errorMessage() }}</p> }
+
+    <button mat-raised-button color="primary" type="submit"
+            [disabled]="form.invalid || loading()" class="full-width">
+      Crear viaje
+    </button>
+  </form>
+</div>
